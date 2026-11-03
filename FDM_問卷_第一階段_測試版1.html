@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 程式開發代理人採用因素｜第一階段專家問卷</title>
+<style>
+/* ============================================================
+   研究者設定區請看 <script> 最上方的 CONFIG
+   ============================================================ */
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --ink:#1f2328; --muted:#5f6b7a; --line:#dde1e6;
+  --accent:#1f5fa8; --accent-soft:#e8f0fa; --ok:#1e7a46; --ok-soft:#e6f4ec;
+  --warn:#a8540f; --warn-soft:#fdf0e3; --err:#b42318; --err-soft:#fdecea; --hl:#fff6d6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;
+  font-size:16px;line-height:1.7}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 120px}
+header.top{position:sticky;top:0;z-index:5;background:rgba(246,247,249,.96);backdrop-filter:blur(4px);
+  border-bottom:1px solid var(--line)}
+header.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.brand{font-weight:700;font-size:15px}
+.prog{flex:1;min-width:160px;height:8px;background:#e3e7ec;border-radius:99px;overflow:hidden}
+.prog>i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.progtxt{font-size:13px;color:var(--muted);white-space:nowrap}
+.banner{margin:14px 0 0;padding:10px 14px;border-radius:8px;background:var(--warn-soft);color:var(--warn);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 22px;margin:18px 0}
+h1{font-size:24px;margin:6px 0 4px;line-height:1.4}
+h2{font-size:20px;margin:0 0 10px}
+h3{font-size:17px;margin:18px 0 6px}
+p{margin:8px 0}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.tag{display:inline-block;font-size:13px;padding:1px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+.btns{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-top:18px}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:#fff;padding:10px 18px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.link{border:none;background:none;color:var(--accent);padding:4px 0;text-decoration:underline}
+label.chk{display:flex;gap:10px;align-items:flex-start;margin:10px 0;cursor:pointer}
+label.chk input{margin-top:6px;width:18px;height:18px}
+.field{margin:16px 0}
+.field>.lab{display:block;font-weight:600;margin-bottom:6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts label{border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;background:#fff;font-size:15px}
+.opts input{margin-right:6px}
+.opts label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+input[type=text],input[type=email],textarea{font:inherit;width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff}
+textarea{min-height:70px;resize:vertical}
+.err{color:var(--err);font-size:14px;margin-top:4px}
+.ok{color:var(--ok);font-size:14px}
+.thanks{margin-top:16px;padding:16px 18px;border-radius:10px;background:var(--ok-soft);color:var(--ok);font-size:20px;font-weight:700;line-height:1.6}
+.thanks small{display:block;font-size:15px;font-weight:400;color:var(--ink);margin-top:4px}
+.cdef{background:#f9fafb;border-left:4px solid var(--accent);padding:8px 12px;border-radius:0 8px 8px 0;font-size:15px}
+/* criterion */
+.crit{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0;background:#fff}
+.crit.bad{border-color:var(--err);background:var(--err-soft)}
+.crit.done{border-color:#b7dcc6}
+.chead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.code{font-weight:700;color:var(--accent);min-width:46px}
+.cname{font-weight:700;font-size:17px}
+.cdesc{font-size:15px;margin:4px 0 0}
+.csit{font-size:14px;color:var(--muted);margin:2px 0 8px}
+.fb{font-size:14px;background:var(--hl);border-radius:6px;padding:6px 10px;margin:6px 0}
+.vals{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin-top:6px}
+.vbox{display:flex;flex-direction:column;gap:2px}
+.vbox span{font-size:13px;color:var(--muted)}
+.vbox input{width:86px;font:inherit;font-size:20px;text-align:center;border:1px solid var(--line);border-radius:8px;padding:4px}
+.vbox input:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+.bar{flex:1;min-width:220px}
+.scale{position:relative;height:30px;margin-top:4px}
+.track{position:absolute;left:0;right:0;top:12px;height:6px;background:#e6e9ee;border-radius:9px}
+.range{position:absolute;top:12px;height:6px;background:var(--accent);border-radius:9px}
+.ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:-2px}
+.sug{margin-top:8px}
+.sug summary{cursor:pointer;color:var(--accent);font-size:14px}
+.review table{width:100%;border-collapse:collapse;font-size:14px}
+.review th,.review td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left}
+.review td.n{text-align:center}
+.pill{font-size:12px;padding:1px 8px;border-radius:99px}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.no{background:var(--err-soft);color:var(--err)}
+pre.json{white-space:pre-wrap;word-break:break-all;background:#f3f4f6;border-radius:8px;padding:10px;font-size:12px;max-height:260px;overflow:auto}
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 0}
+.steps{align-items:center}
+.steps button{padding:3px 10px;font-size:13px;color:var(--ink)}
+.steps button.fin{border-color:#b7dcc6;background:var(--ok-soft);color:var(--ink)}
+.steps button.cur,.steps button.cur.fin{font-size:16px;font-weight:700;padding:5px 14px;color:var(--accent);
+  background:var(--accent-soft);border:2px solid var(--accent)}
+@media (max-width:600px){
+  .card{padding:16px 14px}
+  h1{font-size:20px}
+  .vbox input{width:72px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <div class="brand">第一階段專家問卷</div>
+  <div class="prog"><i id="progbar"></i></div>
+  <div class="progtxt" id="progtxt"></div>
+</div></header>
+<div class="wrap">
+  <div id="banner"></div>
+  <div id="app"></div>
+</div>
+
+<script>
+/* =================================================================
+   研究者設定區（CONFIG）— 正式施測前只需修改這一區
+   ================================================================= */
+const CONFIG = {
+  // 送出網址：貼上 Google Apps Script「網頁應用程式」網址；留空＝示範模式（不會儲存，只顯示結果）
+  SUBMIT_URL: "https://script.google.com/macros/s/AKfycbzNgc_SA6dGqkFdFtktPMOOkhZAglMd68NQG9ZoKyLeqejjNtfx-7y81BREqOvgSNQ_4A/exec",
+  // 第幾輪：1＝全部準則；2＝只顯示 ROUND2 列出的未收斂準則
+  ROUND: 1,
+  // 是否請專家另填「單一重要性值」（待確認事項第 3 題；老師要求保留時改成 true）
+  SINGLE_VALUE: false,
+  // 研究資訊
+  ADVISOR: "陳麗妃 博士",
+  STUDENT: "何玟皜",
+  CONTACT: "Cloudhe21@gmail.com",
+  MINUTES: 20,
+  DEADLINE: "2026 年 12 月 15 日",            // 例如 "2026 年 12 月 15 日"，留空則不顯示
+  // 第二輪設定：未收斂之準則與第一輪全體專家統計（幾何平均數），由 Excel 計算結果填入
+  ROUND2: {
+    PR3: { CM: 4.93, OM: 7.66 }
+  },
+};
+/* ================================================================= */
+
+const DATA = {"cons": [{"abbr": "PT", "name": "技術認知（PT）", "def": "開發者對 AI 程式開發代理人能提升其任務效率、工作績效與工作品質，以及使用難易程度之知覺", "items": [{"code": "PT1", "name": "任務效率提升感", "def": "使用 AI 程式開發代理人能縮短完成開發任務所需時間之程度", "sit": "如代理人自動完成重構、撰寫測試或修正錯誤所節省之時間"}, {"code": "PT2", "name": "工作績效與生產力提升感", "def": "使用 AI 程式開發代理人能提升個人工作績效與產出量之程度", "sit": "如可同時指派多項任務，提升單位時間內完成之需求或議題數"}, {"code": "PT3", "name": "工作品質提升感", "def": "使用 AI 程式開發代理人能提升程式碼與交付成果品質之程度", "sit": "如代理人產出之程式碼通過測試，並符合團隊程式風格與架構規範"}, {"code": "PT4", "name": "整體有用性認知", "def": "整體而言，AI 程式開發代理人對開發工作有幫助之程度", "sit": "綜合評估代理人於日常開發流程中之整體助益"}, {"code": "PT5", "name": "易用性認知", "def": "學習與操作 AI 程式開發代理人之難易程度", "sit": "如設定代理人權限、撰寫任務指令，以及操作 IDE 或終端機整合介面之難易"}]}, {"abbr": "CF", "name": "相容性與人機協作因素（CF）", "def": "AI 程式開發代理人與開發者既有工作方式之契合程度、開發者之知識準備，以及開發者與代理人分工、監督、控制並驗證其產出之配合程度", "items": [{"code": "CF1", "name": "工作方式契合度", "def": "AI 程式開發代理人與開發者既有開發流程及偏好工作方式之契合程度", "sit": "如代理人能否融入既有 IDE、版本控制、程式碼審查與 CI/CD 流程"}, {"code": "CF2", "name": "知識準備度", "def": "開發者具備有效使用 AI 程式開發代理人並指派任務所需知識之程度", "sit": "如撰寫明確任務指令、拆解任務及提供專案脈絡之能力"}, {"code": "CF3", "name": "任務適配度", "def": "開發任務之特性（如複雜度、風險程度）與 AI 程式開發代理人能力相符，而適合交由代理人執行之程度", "sit": "如區分適合交由代理人之樣板程式與測試撰寫，以及不宜交付之核心架構或高風險修改"}, {"code": "CF4", "name": "人類監督可行性", "def": "開發者能即時掌握 AI 程式開發代理人之規劃、執行過程與運作狀態之程度", "sit": "如能檢視代理人之任務規劃、執行步驟、終端機指令與修改紀錄"}, {"code": "CF5", "name": "可控制性", "def": "開發者能於必要時暫停、修正或覆寫 AI 程式開發代理人行動之程度", "sit": "如能設定權限與核准機制，並於執行中途中止、回復或覆寫代理人之修改"}, {"code": "CF6", "name": "可驗證性", "def": "開發者能以合理時間與心力確認 AI 程式開發代理人產出與行動正確之程度", "sit": "如能透過差異比對、測試與程式碼審查，於合理時間內確認代理人之修改正確"}]}, {"abbr": "SF", "name": "社會因素（SF）", "def": "開發者知覺重要他人、同儕與專業社群對其使用 AI 程式開發代理人之期待與評價", "items": [{"code": "SF1", "name": "關鍵影響者期待", "def": "對開發者具影響力之人士期待其使用 AI 程式開發代理人之程度", "sit": "如主管或技術負責人期待團隊使用代理人"}, {"code": "SF2", "name": "重要他人主觀規範", "def": "開發者知覺重要他人認為其應使用 AI 程式開發代理人之程度", "sit": "如同事或團隊成員認為應採用代理人"}, {"code": "SF3", "name": "同儕使用氛圍", "def": "同事中使用 AI 程式開發代理人之比例對開發者使用之影響", "sit": "如團隊中已有多數成員以代理人完成開發任務"}, {"code": "SF4", "name": "形象與地位認知", "def": "使用 AI 程式開發代理人在組織中可提升個人形象與地位之程度", "sit": "如熟練運用代理人被視為具備新技術能力"}, {"code": "SF5", "name": "專業社群／同業觀感", "def": "開發者社群與同業對 AI 程式開發代理人之評價影響開發者看法之程度", "sit": "如技術社群、論壇與同業對代理人工具之評價與經驗分享"}]}, {"abbr": "PEF", "name": "個人與環境因素（PEF）", "def": "組織為開發者使用 AI 程式開發代理人所提供之資源與使用條件、訓練、鼓勵氛圍與高階管理支持", "items": [{"code": "PEF1", "name": "組織資源與使用條件", "def": "組織提供 AI 程式開發代理人工具、授權與運算資源，以及開發者具備使用所需之權限與時間等條件之程度", "sit": "如組織提供代理人工具授權、API 額度、運算資源與可存取之開發環境"}, {"code": "PEF2", "name": "組織訓練支持", "def": "組織提供 AI 程式開發代理人使用訓練與技術支援之程度", "sit": "如組織提供代理人使用訓練、內部指引與技術支援"}, {"code": "PEF3", "name": "組織使用氛圍與鼓勵", "def": "組織文化與激勵措施鼓勵使用 AI 程式開發代理人之程度", "sit": "如組織鼓勵分享代理人使用經驗，或將其納入流程改善"}, {"code": "PEF4", "name": "高階管理支持", "def": "高階管理者對導入 AI 程式開發代理人之承諾與支持程度", "sit": "如高階主管將代理人導入列為組織策略並投入預算"}]}, {"abbr": "TR", "name": "信任（TR）", "def": "在不確定且可能受損的情境下，開發者相信 AI 程式開發代理人能可靠地協助其達成開發目標之正向預期", "items": [{"code": "TR1", "name": "生成品質與準確性", "def": "開發者相信 AI 程式開發代理人產出之程式碼與資訊正確可靠之程度", "sit": "如相信代理人產生之程式碼可正確建置、通過測試且不引入新錯誤"}, {"code": "TR2", "name": "偏誤與可解釋性", "def": "開發者相信 AI 程式開發代理人之推理與行動過程透明、可解釋且無不當偏誤之程度", "sit": "如相信代理人能說明其修改理由與推理過程"}, {"code": "TR3", "name": "資料安全與隱私", "def": "開發者相信 AI 程式開發代理人及其供應商能妥善保護程式碼與資料之程度", "sit": "如相信代理人及其供應商不會不當保存、使用或外洩程式庫與憑證"}, {"code": "TR4", "name": "代理人自主能力信任", "def": "開發者相信 AI 程式開發代理人有能力自主完成多步驟開發任務之程度", "sit": "如相信代理人能自主完成跨檔案修改、執行測試與修正錯誤等多步驟任務"}]}, {"abbr": "PR", "name": "知覺風險（PR）", "def": "開發者評估使用 AI 程式開發代理人可能對資料、工作、智慧財產、個人技能與責任歸屬造成損失之程度", "items": [{"code": "PR1", "name": "資料安全與隱私風險", "def": "開發者評估使用 AI 程式開發代理人可能造成程式碼、商業機密或個人資料外洩之損失程度", "sit": "如代理人存取程式庫、環境變數或憑證時，造成商業機密或個人資料外洩"}, {"code": "PR2", "name": "工作安全疑慮", "def": "開發者擔憂 AI 程式開發代理人取代其工作或降低其職涯價值之程度", "sit": "如擔憂代理人普及後減少開發人力需求或降低個人專業價值"}, {"code": "PR3", "name": "著作權與作者歸屬疑慮", "def": "開發者擔憂 AI 程式開發代理人產出之著作權、授權與作者歸屬不明確之程度", "sit": "如代理人產出之程式碼涉及開源授權衝突或著作權歸屬不明"}, {"code": "PR4", "name": "自動化依賴與技能退化風險", "def": "開發者擔憂過度依賴 AI 程式開發代理人而導致自滿或專業技能退化之程度", "sit": "如長期由代理人撰寫與除錯，導致自身除錯與設計能力退化"}, {"code": "PR5", "name": "自主行動責任歸屬疑慮", "def": "開發者擔憂 AI 程式開發代理人自主行動造成錯誤時責任歸屬不明之程度", "sit": "如代理人誤刪檔案、執行錯誤指令或部署有缺陷之程式時，責任歸屬不明"}]}, {"abbr": "AU", "name": "AI 自主性（AU）", "def": "AI 程式開發代理人在資訊蒐集、方案分析、決策選擇與行動執行各階段自主運作之程度", "items": [{"code": "AU1", "name": "資訊蒐集自主程度", "def": "AI 程式開發代理人自主蒐集與讀取專案資訊、文件與程式碼之程度", "sit": "如代理人自主搜尋程式庫、讀取文件與相關檔案以掌握專案脈絡"}, {"code": "AU2", "name": "方案分析判斷自主程度", "def": "AI 程式開發代理人自主分析問題並提出可行方案之程度", "sit": "如代理人自主診斷錯誤原因並提出修正方案"}, {"code": "AU3", "name": "決策選擇自主程度", "def": "AI 程式開發代理人自主於方案中做出選擇之程度", "sit": "如代理人自主決定採用何種修正方案或實作方式"}, {"code": "AU4", "name": "行動執行自主程度", "def": "AI 程式開發代理人自主修改程式碼、執行指令與部署之程度", "sit": "如代理人自主修改多個檔案、執行終端機指令、執行測試或提交變更"}]}]};
+
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v; else if (k === 'html') e.innerHTML = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else if (v !== null && v !== undefined) e.setAttribute(k, v);
+  }
+  for (const k of kids.flat()) if (k !== null && k !== undefined) e.append(k.nodeType ? k : document.createTextNode(k));
+  return e;
+};
+const params = new URLSearchParams(location.search);
+let round = Number(params.get('round') || CONFIG.ROUND) === 2 ? 2 : 1;
+const expertId = (params.get('id') || '').trim();
+const STORE = 'fdm_' + (CONFIG.SUBMIT_URL ? 'live' : 'demo') + '_r' + round + '_' + (expertId || 'anon');
+const store = {
+  get() { try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (e) { return null; } },
+  set(v) { try { localStorage.setItem(STORE, JSON.stringify(v)); } catch (e) {} },
+  clear() { try { localStorage.removeItem(STORE); } catch (e) {} },
+};
+
+const CONS = round === 2
+  ? DATA.cons.map(c => ({ ...c, items: c.items.filter(it => CONFIG.ROUND2[it.code]) })).filter(c => c.items.length)
+  : DATA.cons;
+const ALLITEMS = CONS.flatMap(c => c.items);
+
+const BG = [
+  { k: 'years', lab: '軟體開發年資', opts: ['未滿 5 年', '5–9 年', '10–14 年', '15 年以上'], screen: '未滿 5 年' },
+  { k: 'role', lab: '現任職務', opts: ['後端', '前端', '全端', '測試', '維運', '技術主管', '其他'], other: true },
+  { k: 'coding', lab: '您目前的工作內容是否包含撰寫或修改程式碼', opts: ['是', '否'], screen: '否' },
+  { k: 'industry', lab: '任職產業', text: true },
+  { k: 'size', lab: '企業規模（員工人數）', opts: ['50 人以下', '51–200 人', '201–1,000 人', '1,001 人以上'] },
+  { k: 'period', lab: 'AI 程式開發代理人使用期間', opts: ['未滿 3 個月', '3–6 個月', '6–12 個月', '1 年以上'], screen: '未滿 3 個月' },
+  { k: 'tools', lab: '主要使用之 AI 程式開發代理人（可複填）', text: true },
+  { k: 'freq', lab: '每週使用頻率', opts: ['1–2 天', '3–4 天', '5 天以上'] },
+  { k: 'source', lab: 'AI 程式開發代理人來源', opts: ['公司提供', '自行攜帶（BYOAI）', '兩者皆有'] },
+  { k: 'gov', lab: '所屬組織之 AI 程式開發代理人治理現況', opts: ['無相關政策', '政策研擬中', '已有政策但未落實', '已有政策且確實執行', '不清楚'] },
+  { k: 'aware', lab: '組織是否知悉您使用 AI 程式開發代理人', opts: ['是', '否', '不確定'] },
+  { k: 'coi', lab: '是否任職於 AI 程式開發代理人供應商，或與特定工具具有商業利害關係', opts: ['否', '是'], other: true, otherLab: '請說明' },
+];
+
+const blank = () => ({ step: 0, consent: false, name: '', email: '', bg: {}, ans: {}, other: {}, submitted: false });
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+let showErrIntro = false;
+const idErr = k => { const v = String(S[k] || '').trim();
+  if (!v) return k === 'name' ? '請填寫姓名或暱稱' : '請填寫 E-mail';
+  if (k === 'email' && !EMAIL_RE.test(v)) return 'E-mail 格式不正確';
+  return ''; };
+const introOk = () => S.consent && !idErr('name') && !idErr('email');
+let S = store.get() || blank();
+const confirmReset = () => { try { return window.confirm('確定要清除本機上的填答紀錄並重新填寫嗎？（已送出的資料不受影響）'); } catch (e) { return true; } };
+const save = () => store.set(S);
+
+// ---------- steps ----------
+const STEPS = round === 2
+  ? [{ id: 'intro' }, ...CONS.map((c, i) => ({ id: 'cons', ci: i })), { id: 'review' }]
+  : [{ id: 'intro' }, { id: 'bg' }, ...CONS.map((c, i) => ({ id: 'cons', ci: i })), { id: 'other' }, { id: 'review' }];
+
+function itemState(code) {
+  const a = S.ans[code] || {};
+  const isNum = v => v !== '' && v !== undefined && v !== null && Number.isInteger(Number(v)) && Number(v) >= 0 && Number(v) <= 10;
+  const need = ['c', 'o'].concat(CONFIG.SINGLE_VALUE ? ['s'] : []);
+  const filled = need.every(k => isNum(a[k]));
+  const partial = need.some(k => a[k] !== '' && a[k] !== undefined);
+  let msg = '';
+  for (const k of need) if (a[k] !== '' && a[k] !== undefined && !isNum(a[k])) msg = '請填 0 到 10 的整數。';
+  if (!msg && isNum(a.c) && isNum(a.o) && Number(a.c) > Number(a.o)) msg = '最保守認知值不可高於最樂觀認知值，請調整。';
+  if (!msg && CONFIG.SINGLE_VALUE && isNum(a.s) && isNum(a.c) && isNum(a.o) && (Number(a.s) < Number(a.c) || Number(a.s) > Number(a.o)))
+    msg = '單一重要性值應介於保守值與樂觀值之間。';
+  return { ok: filled && !msg, filled, partial, msg };
+}
+const doneCount = () => ALLITEMS.filter(it => itemState(it.code).ok).length;
+const bgOk = () => BG.every(q => {
+  const v = S.bg[q.k];
+  if (!v || !String(v).trim()) return false;
+  if (q.other && (v === '其他' || (q.k === 'coi' && v === '是')) && !String(S.bg[q.k + '_o'] || '').trim()) return false;
+  return true;
+});
+const screened = () => BG.some(q => q.screen && S.bg[q.k] === q.screen);
+function stepOk(st) {
+  if (st.id === 'intro') { showErrIntro = true; return introOk(); }
+  if (st.id === 'bg') return bgOk() && !screened();
+  if (st.id === 'cons') return CONS[st.ci].items.every(it => itemState(it.code).ok);
+  return true;
+}
+
+function progress() {
+  const pct = Math.round(doneCount() / ALLITEMS.length * 100);
+  $('#progbar').style.width = pct + '%';
+  $('#progtxt').textContent = `已完成 ${doneCount()}／${ALLITEMS.length} 項準則`;
+}
+
+function nav(back, next, nextLabel = '下一步') {
+  const st = STEPS[S.step];
+  const b = el('div', { class: 'btns' },
+    back ? el('button', { onclick: () => go(S.step - 1) }, '上一步') : el('span'),
+    next ? el('button', { class: 'primary', id: 'nextbtn', onclick: () => tryNext() }, nextLabel) : null);
+  return b;
+}
+function tryNext() {
+  const st = STEPS[S.step];
+  if (!stepOk(st)) {
+    render(true);
+    const first = document.querySelector('.crit.bad, .err');
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  go(S.step + 1);
+}
+function go(i) { S.step = Math.max(0, Math.min(STEPS.length - 1, i)); save(); render(); window.scrollTo(0, 0); }
+
+function stepper() {
+  const box = el('div', { class: 'steps' });
+  const add = (id, label, fin, title) => {
+    const si = STEPS.findIndex(s => s.id === id.id && (id.ci === undefined || s.ci === id.ci));
+    if (si < 0) return;
+    box.append(el('button', { class: (S.step === si ? 'cur ' : '') + (fin ? 'fin' : ''), title: title || label,
+      onclick: () => { if (id.id === 'intro' || id.id === 'bg' || round === 2 || stepOk(STEPS[1])) go(si); } }, label));
+  };
+  add({ id: 'intro' }, '問卷說明', introOk());
+  if (round === 1) add({ id: 'bg' }, '專家背景資料', bgOk() && !screened());
+  CONS.forEach((c, i) => add({ id: 'cons', ci: i }, c.abbr, c.items.every(it => itemState(it.code).ok), c.name));
+  if (round === 1) add({ id: 'other' }, '其他建議', false);
+  return box;
+}
+
+// ---------- pages ----------
+function pIntro() {
+  const c = el('div', { class: 'card' });
+  c.append(
+    el('span', { class: 'tag' }, round === 2 ? '第二輪' : '第一輪'),
+    el('h1', {}, '軟體開發人員採用 AI 程式開發代理人之關鍵因素評估'),
+    el('div', { class: 'muted' }, '第一階段：模糊德爾菲法（FDM）專家問卷'),
+    el('p', {}, '敬愛的專家您好：'),
+    round === 2
+      ? el('div', {}, el('p', {}, '我是國立臺灣師範大學工業教育學系科技應用管理組碩士在職專班研究生何玟皜，感謝您完成第一輪問卷。'), el('p', {}, '部分準則在第一輪尚未達成專家共識，本輪僅請您重新評估這些準則。每一題旁附有第一輪全體專家「最保守認知值」與「最樂觀認知值」的幾何平均數，供您參考後重新給分；您可維持或調整原本的判斷。'))
+      : el('div', {}, el('p', {}, '我是國立臺灣師範大學工業教育學系科技應用管理組碩士在職專班研究生何玟皜，感謝您撥冗填寫本問卷。'), el('p', {}, '本研究探討軟體開發人員採用 AI 程式開發代理人（AI coding agents）時考量的關鍵因素。本階段想請您依實務經驗，確認自文獻整理出的 7 項構面、33 項準則是否適合作為評估因素。')),
+    el('p', {}, `本問卷預估填答時間約 ${round === 2 ? 5 : CONFIG.MINUTES} 分鐘，填答內容會自動暫存在您的瀏覽器，中途關閉後以同一瀏覽器重新開啟即可接續。${CONFIG.DEADLINE ? '敬請於 ' + CONFIG.DEADLINE + ' 前完成。' : ''}`),
+    el('div', { class: 'cdef' }, el('b', {}, '本研究所稱「AI 程式開發代理人」'), '：能在開發者授權範圍內，自主規劃並執行多步驟開發任務（如讀取程式庫、跨檔案修改程式碼、執行終端機指令與測試、提交變更）之 AI 工具，例如 Claude Code、GitHub Copilot 代理模式、Cursor Agent 等；僅提供程式碼補全或對話建議之工具不在此限。'),
+    el('h3', {}, '研究倫理與資料使用'),
+    el('p', { class: 'small' }, '您的填答僅供學術研究使用，資料以專家代碼處理，研究結果僅以彙總方式呈現，不會揭露任何可識別個人或所屬組織之資訊。參與本研究係出於自願，您得隨時退出而不受任何影響。'),
+  );
+  const cb = el('input', { type: 'checkbox' }); cb.checked = S.consent;
+  cb.addEventListener('change', () => { S.consent = cb.checked; save(); render(); });
+  c.append(el('label', { class: 'chk' }, cb, el('span', {}, '我已閱讀上述說明，同意參與本研究。')));
+  if (showErrIntro && !S.consent) c.append(el('div', { class: 'err' }, '請勾選同意後再開始填答'));
+  const idf = (k, lab, type, ph) => {
+    const inp = el('input', { type, id: 'f_' + k, name: k, value: S[k] || '', placeholder: ph,
+      autocomplete: k === 'email' ? 'email' : 'nickname', spellcheck: 'false' });
+    const er = el('div', { class: 'err' });
+    const chk = () => { er.textContent = idErr(k); };
+    const sync = () => { S[k] = inp.value; save(); if (showErrIntro) chk(); };
+    inp.addEventListener('input', sync);
+    inp.addEventListener('change', sync);              // 瀏覽器自動填入時觸發
+    inp.addEventListener('blur', () => setTimeout(() => { sync(); chk(); }, 250));  // 延後檢查，避免干擾自動填入選單
+    if (showErrIntro) chk();
+    return el('div', { class: 'field' }, el('label', { class: 'lab', for: 'f_' + k }, lab, el('span', { style: 'color:var(--err)' }, ' *')), inp, er);
+  };
+  c.append(el('p', { class: 'small muted', style: 'margin-top:14px' }, '標示 ', el('span', { style: 'color:var(--err)' }, '*'), ' 者為必填。'));
+  const idForm = el('form', { autocomplete: 'on', onsubmit: e => { e.preventDefault(); tryNext(); } });
+  idForm.append(idf('name', '姓名或暱稱', 'text', '請填寫您的姓名或暱稱'),
+    idf('email', 'E-mail', 'email', '例如 name@example.com'));
+  c.append(idForm,
+    el('p', { class: 'small muted' }, '姓名（暱稱）與 E-mail 僅用於寄送第二輪問卷、確認填答疑問與致謝，分析與發表時一律以專家代碼呈現，不會對外公開。'));
+  if (expertId) c.append(el('p', { class: 'small muted' }, '專家代碼：' + expertId));
+  c.append(el('p', { class: 'small muted' }, `指導教授：${CONFIG.ADVISOR}　研究生：${CONFIG.STUDENT}　聯絡信箱：${CONFIG.CONTACT}`));
+  c.append(nav(false, true, '開始填答'));
+  c.prepend(stepper());
+  return c;
+}
+
+function pBg(showErr) {
+  const c = el('div', { class: 'card' });
+  c.append(stepper(), el('h2', { style: 'margin-top:14px' }, '壹、專家背景資料'), el('p', { class: 'muted small' }, '年資與使用經驗用以確認專家資格；代理人來源與治理現況僅作為解讀結果之參考。'));
+  BG.forEach(q => {
+    const f = el('div', { class: 'field' }, el('div', { class: 'lab' }, q.lab));
+    if (q.text) {
+      const t = el('input', { type: 'text', value: S.bg[q.k] || '' });
+      t.addEventListener('input', () => { S.bg[q.k] = t.value; save(); });
+      f.append(t);
+    } else {
+      const box = el('div', { class: 'opts' });
+      q.opts.forEach(o => {
+        const r = el('input', { type: 'radio', name: q.k, value: o }); r.checked = S.bg[q.k] === o;
+        r.addEventListener('change', () => { S.bg[q.k] = o; save(); render(); });
+        box.append(el('label', {}, r, o));
+      });
+      f.append(box);
+      if (q.other && (S.bg[q.k] === '其他' || (q.k === 'coi' && S.bg[q.k] === '是'))) {
+        const t = el('input', { type: 'text', value: S.bg[q.k + '_o'] || '', placeholder: q.otherLab || '請填寫' });
+        t.addEventListener('input', () => { S.bg[q.k + '_o'] = t.value; save(); });
+        f.append(el('div', { style: 'margin-top:6px' }, t));
+      }
+      if (q.screen && S.bg[q.k] === q.screen)
+        f.append(el('div', { class: 'err' }, '本研究之專家條件為：軟體開發年資 5 年以上、目前工作內容包含撰寫或修改程式碼，且使用 AI 程式開發代理人 3 個月以上。很抱歉您目前不符合資格，感謝您的協助！'));
+    }
+    if (showErr && !(S.bg[q.k] && String(S.bg[q.k]).trim())) f.append(el('div', { class: 'err' }, '此題尚未填寫'));
+    c.append(f);
+  });
+  c.append(nav(true, true));
+  return c;
+}
+
+function scaleBar(code) {
+  const a = S.ans[code] || {};
+  const bar = el('div', { class: 'bar' });
+  const sc = el('div', { class: 'scale' }, el('div', { class: 'track' }));
+  const c = Number(a.c), o = Number(a.o);
+  if (a.c !== '' && a.o !== '' && a.c !== undefined && a.o !== undefined && c >= 0 && o <= 10 && c <= o)
+    sc.append(el('div', { class: 'range', style: `left:${c * 10}%;width:${Math.max((o - c) * 10, 1.2)}%` }));
+  bar.append(sc, el('div', { class: 'ticks' }, ...Array.from({ length: 11 }, (_, i) => el('span', {}, String(i)))));
+  return bar;
+}
+function pCons(ci, showErr) {
+  const con = CONS[ci];
+  const c = el('div', { class: 'card' });
+  if (ci === 0) {
+    c.append(el('h2', {}, round === 2 ? '第二輪：未收斂準則之重新評估' : '貳、準則重要程度評估'),
+      el('p', {}, '請依您的實務經驗，判斷「在軟體開發人員決定是否採用 AI 程式開發代理人時，該準則的重要程度」，以 0 至 10 分給予一個區間（0＝完全不重要，10＝極為重要）：'),
+      el('p', { class: 'small' }, el('b', {}, '最保守認知值'), '＝您認為該準則重要程度最低可能是幾分；', el('b', {}, '最樂觀認知值'), '＝最高可能是幾分。' + (CONFIG.SINGLE_VALUE ? '另請填「單一重要性值」，代表最可能的重要程度。' : '')),
+      el('p', { class: 'small muted' }, '例：「任務效率提升感」填 6 與 9，表示您認為其重要程度最低約 6 分、最高約 9 分。若您認為準則名稱或定義需修正、應合併或刪除，請點開「修正建議」填寫。'));
+  }
+  c.append(stepper());
+  c.append(el('h2', { style: 'margin-top:14px' }, `構面${'一二三四五六七'[DATA.cons.findIndex(x => x.abbr === con.abbr)]}：${con.name}`),
+    el('div', { class: 'cdef' }, el('b', {}, '構面定義：'), con.def));
+  con.items.forEach(it => {
+    const st = itemState(it.code);
+    const box = el('div', { class: 'crit ' + (st.ok ? 'done' : (showErr || st.msg) && (showErr || st.partial) ? 'bad' : ''), id: 'c_' + it.code });
+    box.append(el('div', { class: 'chead' }, el('span', { class: 'code' }, it.code), el('span', { class: 'cname' }, it.name)),
+      el('div', { class: 'cdesc' }, it.def), el('div', { class: 'csit' }, it.sit));
+    if (round === 2 && CONFIG.ROUND2[it.code])
+      box.append(el('div', { class: 'fb' }, `第一輪全體專家：最保守認知值幾何平均數 ${CONFIG.ROUND2[it.code].CM.toFixed(2)}；最樂觀認知值幾何平均數 ${CONFIG.ROUND2[it.code].OM.toFixed(2)}`));
+    const a = S.ans[it.code] = S.ans[it.code] || { c: '', o: '', s: '', note: '' };
+    const mk = (k, lab) => {
+      const inp = el('input', { type: 'number', min: 0, max: 10, step: 1, inputmode: 'numeric', value: a[k], 'aria-label': `${it.code} ${lab}` });
+      inp.addEventListener('input', () => { a[k] = inp.value; save(); refreshItem(it.code); });
+      return el('label', { class: 'vbox' }, el('span', {}, lab), inp);
+    };
+    const vals = el('div', { class: 'vals' }, mk('c', '最保守認知值'), mk('o', '最樂觀認知值'), CONFIG.SINGLE_VALUE ? mk('s', '單一重要性值') : null, scaleBar(it.code));
+    box.append(vals, el('div', { class: 'msg' }, st.msg ? el('div', { class: 'err' }, st.msg) : (showErr && !st.filled ? el('div', { class: 'err' }, '此題尚未填寫完整') : null)));
+    const det = el('details', { class: 'sug' }, el('summary', {}, '修正建議（選填）'));
+    if (a.note) det.open = true;
+    const ta = el('textarea', { placeholder: '例如：建議更名為…／與某準則合併／定義不清楚之處…' }); ta.value = a.note || '';
+    ta.addEventListener('input', () => { a.note = ta.value; save(); });
+    det.append(ta); box.append(det);
+    c.append(box);
+  });
+  c.append(nav(true, true, ci === CONS.length - 1 ? (round === 2 ? '檢視並送出' : '下一步') : '下一個構面'));
+  return c;
+}
+function refreshItem(code) {
+  const box = document.getElementById('c_' + code); if (!box) return;
+  const st = itemState(code);
+  box.className = 'crit ' + (st.ok ? 'done' : st.msg ? 'bad' : '');
+  box.querySelector('.msg').replaceChildren(st.msg ? el('div', { class: 'err' }, st.msg) : '');
+  const old = box.querySelector('.bar'); old.replaceWith(scaleBar(code));
+  progress();
+  const sb = document.querySelector('.steps'); if (sb) sb.replaceWith(stepper());
+}
+
+function pOther() {
+  const c = el('div', { class: 'card' });
+  c.append(stepper(), el('h2', { style: 'margin-top:14px' }, '參、其他建議'), el('p', {}, '若您認為有本問卷未涵蓋、但對軟體開發人員採用 AI 程式開發代理人具重要影響之因素，或對構面分類有其他意見，敬請說明（選填）：'));
+  [['add', '建議新增之準則'], ['merge', '建議合併或刪除之準則'], ['cons', '構面分類之意見'], ['misc', '其他']].forEach(([k, lab]) => {
+    const ta = el('textarea'); ta.value = S.other[k] || '';
+    ta.addEventListener('input', () => { S.other[k] = ta.value; save(); });
+    c.append(el('div', { class: 'field' }, el('div', { class: 'lab' }, lab), ta));
+  });
+  c.append(nav(true, true, '檢視並送出'));
+  return c;
+}
+
+function payload() {
+  const rows = ALLITEMS.map(it => ({ code: it.code, c: Number(S.ans[it.code].c), o: Number(S.ans[it.code].o),
+    ...(CONFIG.SINGLE_VALUE ? { s: Number(S.ans[it.code].s) } : {}), note: S.ans[it.code].note || '' }));
+  return { stage: 'FDM', round, expertId: expertId || '', name: (S.name || '').trim(), email: (S.email || '').trim(), submittedAt: new Date().toISOString(), submitCount: (S.count || 0) + 1,
+    singleValue: CONFIG.SINGLE_VALUE, background: round === 2 ? {} : S.bg, answers: rows, other: round === 2 ? {} : S.other, ua: navigator.userAgent };
+}
+function pReview() {
+  const c = el('div', { class: 'card review' });
+  const allOk = ALLITEMS.every(it => itemState(it.code).ok) && (round === 2 || bgOk());
+  c.append(el('h2', {}, '檢視與送出'), el('p', { class: 'muted small' }, '請確認以下填答；點選構面代號可回到該頁修改。'));
+  const tb = el('table', {}, el('tr', {}, el('th', {}, '編號'), el('th', {}, '準則'), el('th', {}, '保守'), el('th', {}, '樂觀'), CONFIG.SINGLE_VALUE ? el('th', {}, '單一') : null, el('th', {}, '狀態')));
+  ALLITEMS.forEach(it => {
+    const a = S.ans[it.code] || {}; const st = itemState(it.code);
+    tb.append(el('tr', {}, el('td', {}, it.code), el('td', {}, it.name), el('td', { class: 'n' }, a.c ?? ''), el('td', { class: 'n' }, a.o ?? ''),
+      CONFIG.SINGLE_VALUE ? el('td', { class: 'n' }, a.s ?? '') : null, el('td', {}, el('span', { class: 'pill ' + (st.ok ? 'ok' : 'no') }, st.ok ? '完成' : '未完成'))));
+  });
+  c.append(stepper(), tb);
+  const msg = el('div', { id: 'submitmsg' });
+  const label = S.submitted ? '修改後重新送出' : (CONFIG.SUBMIT_URL ? '送出問卷' : '送出（示範模式）');
+  const btn = el('button', { class: 'primary', onclick: () => {
+    if (S.submitted) { let ok = true; try { ok = window.confirm('您已送出過本問卷。重新送出將以這次的內容為準，確定要重新送出嗎？'); } catch (e) {} if (!ok) return; }
+    submit(btn, msg); } }, label);
+  if (!allOk) btn.disabled = true;
+  c.append(el('div', { class: 'btns' }, el('button', { onclick: () => go(S.step - 1) }, '上一步'), btn), msg);
+  if (!allOk) msg.append(el('div', { class: 'err' }, '尚有未完成之題目，請點選構面代號回到該頁補填。'));
+  if (S.submitted) msg.append(thanks('您已送出本問卷，感謝您的協助！', '若需修改，可點選構面代號回到該頁修改後，再按「修改後重新送出」，研究者將以最後一次送出的內容為準。'),
+    el('button', { class: 'link', onclick: () => { if (confirmReset()) { S = blank(); store.clear(); render(); window.scrollTo(0, 0); } } }, '清除並重新填寫一份（同一台電腦有其他專家要填答時使用）'));
+  return c;
+}
+const thanks = (a, b) => el('div', { class: 'thanks' }, a, b ? el('small', {}, b) : null);
+async function submit(btn, msg) {
+  btn.disabled = true; msg.replaceChildren(el('p', { class: 'muted' }, '送出中…'));
+  const data = payload();
+  if (!CONFIG.SUBMIT_URL) {
+    S.submitted = true; S.count = (S.count || 0) + 1; save();
+    btn.disabled = false; btn.textContent = '修改後重新送出';
+    msg.replaceChildren(thanks('感謝您完成本問卷！', '示範模式：資料未儲存。以下為正式施測時會送到 Google 試算表的內容：'),
+      el('pre', { class: 'json' }, JSON.stringify(data, null, 1)),
+      el('button', { onclick: () => { S = blank(); store.clear(); render(); window.scrollTo(0, 0); } }, '清除並重新示範'));
+    return;
+  }
+  try {
+    await fetch(CONFIG.SUBMIT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) });
+    S.submitted = true; S.count = (S.count || 0) + 1; save();
+    btn.disabled = false; btn.textContent = '修改後重新送出';
+    msg.replaceChildren(thanks('已送出，感謝您的協助！', '您可以關閉此頁面。若需修改填答，可回到該頁修改後再按「修改後重新送出」。'));
+  } catch (e) {
+    btn.disabled = false;
+    msg.replaceChildren(el('div', { class: 'err' }, '送出失敗，請確認網路連線後再試一次；若仍無法送出，請下載填答檔寄至 ' + CONFIG.CONTACT + '。'),
+      el('button', { onclick: () => { const b = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' }); const u = URL.createObjectURL(b);
+        const a = el('a', { href: u, download: `FDM_round${round}_${expertId || 'expert'}.json` }); document.body.append(a); a.click(); a.remove(); } }, '下載填答檔'));
+  }
+}
+
+function render(showErr = false) {
+  const st = STEPS[S.step] || STEPS[0];
+  const app = $('#app'); app.replaceChildren();
+  $('#banner').replaceChildren(CONFIG.SUBMIT_URL ? '' : el('div', { class: 'banner' }, '示範模式：送出後資料不會儲存（研究者尚未設定送出網址）。' + (round === 1 ? ' ' : ''),
+    el('button', { class: 'link', onclick: () => { location.search = round === 2 ? '' : '?round=2'; } }, round === 2 ? '切換回第一輪' : '預覽第二輪畫面')));
+  if (st.id === 'intro') app.append(pIntro());
+  else if (st.id === 'bg') app.append(pBg(showErr));
+  else if (st.id === 'cons') app.append(pCons(st.ci, showErr));
+  else if (st.id === 'other') app.append(pOther());
+  else app.append(pReview());
+  const nb = $('#nextbtn'); if (nb && st.id === 'intro') nb.disabled = false;
+  if (st.id === 'bg' && screened() && nb) nb.disabled = true;
+  progress();
+}
+render();
+</script>
+</body>
+</html>
