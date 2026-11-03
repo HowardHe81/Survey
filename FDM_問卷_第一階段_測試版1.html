@@ -180,7 +180,8 @@ const idErr = k => { const v = String(S[k] || '').trim();
   if (!v) return k === 'name' ? '請填寫姓名或暱稱' : '請填寫 E-mail';
   if (k === 'email' && !EMAIL_RE.test(v)) return 'E-mail 格式不正確';
   return ''; };
-const introOk = () => S.consent && !idErr('name') && !idErr('email');
+const needId = () => !!CONFIG.SUBMIT_URL && !expertId;   // 正式模式必須使用帶 ?id= 的專屬連結
+const introOk = () => !needId() && S.consent && !idErr('name') && !idErr('email');
 let S = store.get() || blank();
 const confirmReset = () => { try { return window.confirm('確定要清除本機上的填答紀錄並重新填寫嗎？（已送出的資料不受影響）'); } catch (e) { return true; } };
 const save = () => store.set(S);
@@ -297,6 +298,8 @@ function pIntro() {
   c.append(idForm,
     el('p', { class: 'small muted' }, '姓名（暱稱）與 E-mail 僅用於寄送第二輪問卷、確認填答疑問與致謝，分析與發表時一律以專家代碼呈現，不會對外公開。'));
   if (expertId) c.append(el('p', { class: 'small muted' }, '專家代碼：' + expertId));
+  if (needId()) c.append(el('div', { class: 'thanks', style: 'background:var(--err-soft);color:var(--err)' }, '請使用研究者寄給您的專屬連結開啟本問卷',
+    el('small', {}, '您目前開啟的網址缺少專家代碼，送出的資料將無法被收到。請回到邀請信，點選信中的問卷連結；若有疑問，請來信 ' + CONFIG.CONTACT + '。')));
   c.append(el('p', { class: 'small muted' }, `指導教授：${CONFIG.ADVISOR}　研究生：${CONFIG.STUDENT}　聯絡信箱：${CONFIG.CONTACT}`));
   c.append(nav(false, true, '開始填答'));
   c.prepend(stepper());
