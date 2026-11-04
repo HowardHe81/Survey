@@ -89,10 +89,28 @@ pre.json{white-space:pre-wrap;word-break:break-all;background:#f3f4f6;border-rad
 .steps button.fin{border-color:#b7dcc6;background:var(--ok-soft);color:var(--ink)}
 .steps button.cur,.steps button.cur.fin{font-size:16px;font-weight:700;padding:5px 14px;color:var(--accent);
   background:var(--accent-soft);border:2px solid var(--accent)}
+/* 填答範例 */
+.example{margin:18px 0;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:#fbfcfd}
+.example h3{margin:0 0 6px}
+.example ol{margin:6px 0;padding-left:22px}
+.example li{margin:2px 0}
+.example .rule{margin:10px 0;padding:8px 12px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:15px}
+.example .tip{font-size:14px;color:var(--muted)}
+.example table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+.example th,.example td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:middle}
+.example th{font-weight:600;color:var(--muted);font-size:13px}
+.example td.n,.example th.n{text-align:center;font-weight:700;width:68px}
+.example th.n{font-weight:600}
+.example td.viz{width:34%;min-width:140px}
+.example .scale{height:18px;margin:0}
+.example .track,.example .range{top:6px}
+.sug.exsum{margin:6px 0 10px}
 @media (max-width:600px){
   .card{padding:16px 14px}
   h1{font-size:20px}
   .vbox input{width:72px}
+  .example .viz{display:none}
+  .example td.n,.example th.n{width:48px}
 }
 </style>
 </head>
@@ -259,6 +277,41 @@ function stepper() {
   return box;
 }
 
+// ---------- 填答說明與範例 ----------
+function exampleBlock() {
+  const sv = CONFIG.SINGLE_VALUE;
+  const EX = [
+    { lab: '【範例 A】指標 A（例如：系統安全性）', c: 7, s: 9, o: 10,
+      say: sv ? '您認為「指標 A」非常重要，在最保守的情況下至少也有 7 分，最可能是 9 分，最樂觀可達 10 分，則請填：保守 7、單一 9、樂觀 10。'
+              : '您認為「指標 A」非常重要，在最保守的情況下至少也有 7 分，最樂觀可達 10 分，則請填：保守 7、樂觀 10。' },
+    { lab: '【範例 B】指標 B（例如：介面美觀度）', c: 4, s: 6, o: 8,
+      say: sv ? '您認為「指標 B」重要性一般，最保守 4 分，最可能 6 分，最樂觀 8 分，則請填：保守 4、單一 6、樂觀 8。'
+              : '您認為「指標 B」重要性一般，最保守 4 分，最樂觀 8 分，則請填：保守 4、樂觀 8。' },
+    { lab: '【範例 C】指標 C（例如：圖示配色）', c: 1, s: 2, o: 3,
+      say: sv ? '您認為「指標 C」不太重要，最保守 1 分，最可能 2 分，最樂觀 3 分，則請填：保守 1、單一 2、樂觀 3。'
+              : '您認為「指標 C」不太重要，最保守 1 分，最樂觀 3 分，則請填：保守 1、樂觀 3。' },
+  ];
+  const bar = (c, o) => el('div', { class: 'scale' }, el('div', { class: 'track' }),
+    el('div', { class: 'range', style: `left:${c * 10}%;width:${Math.max((o - c) * 10, 1.2)}%` }));
+  const tb = el('table', {},
+    el('tr', {}, el('th', {}, '評估準則'), el('th', { class: 'n' }, '最保守認知值'), sv ? el('th', { class: 'n' }, '單一重要性值') : null,
+      el('th', { class: 'n' }, '最樂觀認知值'), el('th', { class: 'viz' }, '區間示意（0–10）')),
+    ...EX.map(x => el('tr', {}, el('td', {}, x.lab), el('td', { class: 'n' }, String(x.c)), sv ? el('td', { class: 'n' }, String(x.s)) : null,
+      el('td', { class: 'n' }, String(x.o)), el('td', { class: 'viz' }, bar(x.c, x.o)))));
+  return el('div', { class: 'example' },
+    el('h3', {}, '填答說明與範例'),
+    el('p', {}, `本問卷請您依專業判斷，針對每項準則的「重要程度」評分。評分採 0 至 10 分（0＝完全不重要，10＝極為重要），為反映專家判斷的模糊性與不確定性，每項準則請填寫${sv ? '三' : '兩'}個數值：`),
+    el('ol', {},
+      el('li', {}, el('b', {}, '最保守認知值'), '：在最嚴格、最保守的情況下，您認為該準則的重要程度「最低」可能是幾分。'),
+      sv ? el('li', {}, el('b', {}, '單一重要性值'), '：您認為該準則「最可能」的重要程度。') : null,
+      el('li', {}, el('b', {}, '最樂觀認知值'), '：在最寬鬆、最樂觀的情況下，您認為該準則的重要程度「最高」可能是幾分。')),
+    el('div', { class: 'rule' }, sv ? '填答原則：最保守認知值 ≤ 單一重要性值 ≤ 最樂觀認知值' : '填答原則：最保守認知值 ≤ 最樂觀認知值'),
+    el('p', { class: 'small' }, el('b', {}, '填答範例：')),
+    ...EX.map(x => el('p', { class: 'small', style: 'margin:4px 0' }, '・若' + x.say)),
+    tb,
+    el('p', { class: 'tip', style: 'margin-top:10px' }, '區間寬窄代表您的把握程度：越有把握，區間可越窄；兩個數值也可以相同。以上範例之指標與分數僅為說明用，與本研究之準則無關。'));
+}
+
 // ---------- pages ----------
 function pIntro() {
   const c = el('div', { class: 'card' });
@@ -272,6 +325,7 @@ function pIntro() {
       : el('div', {}, el('p', {}, '我是國立臺灣師範大學工業教育學系科技應用管理組碩士在職專班研究生何玟皜，感謝您撥冗填寫本問卷。'), el('p', {}, '本研究探討軟體開發人員採用 AI 程式開發代理人（AI coding agents）時考量的關鍵因素。本階段想請您依實務經驗，確認自文獻整理出的 7 項構面、33 項準則是否適合作為評估因素。')),
     el('p', {}, `本問卷預估填答時間約 ${round === 2 ? 5 : CONFIG.MINUTES} 分鐘，填答內容會自動暫存在您的瀏覽器，中途關閉後以同一瀏覽器重新開啟即可接續。${CONFIG.DEADLINE ? '敬請於 ' + CONFIG.DEADLINE + ' 前完成。' : ''}`),
     el('div', { class: 'cdef' }, el('b', {}, '本研究所稱「AI 程式開發代理人」'), '：能在開發者授權範圍內，自主規劃並執行多步驟開發任務（如讀取程式庫、跨檔案修改程式碼、執行終端機指令與測試、提交變更）之 AI 工具，例如 Claude Code、GitHub Copilot 代理模式、Cursor Agent 等；僅提供程式碼補全或對話建議之工具不在此限。'),
+    exampleBlock(),
     el('h3', {}, '研究倫理與資料使用'),
     el('p', { class: 'small' }, '您的填答僅供學術研究使用，資料以專家代碼處理，研究結果僅以彙總方式呈現，不會揭露任何可識別個人或所屬組織之資訊。參與本研究係出於自願，您得隨時退出而不受任何影響。'),
   );
@@ -355,7 +409,8 @@ function pCons(ci, showErr) {
     c.append(el('h2', {}, round === 2 ? '第二輪：未收斂準則之重新評估' : '貳、準則重要程度評估'),
       el('p', {}, '請依您的實務經驗，判斷「在軟體開發人員決定是否採用 AI 程式開發代理人時，該準則的重要程度」，以 0 至 10 分給予一個區間（0＝完全不重要，10＝極為重要）：'),
       el('p', { class: 'small' }, el('b', {}, '最保守認知值'), '＝您認為該準則重要程度最低可能是幾分；', el('b', {}, '最樂觀認知值'), '＝最高可能是幾分。' + (CONFIG.SINGLE_VALUE ? '另請填「單一重要性值」，代表最可能的重要程度。' : '')),
-      el('p', { class: 'small muted' }, '例：「任務效率提升感」填 6 與 9，表示您認為其重要程度最低約 6 分、最高約 9 分。若您認為準則名稱或定義需修正、應合併或刪除，請點開「修正建議」填寫。'));
+      el('details', { class: 'sug exsum' }, el('summary', {}, '再看一次填答說明與範例'), exampleBlock()),
+      el('p', { class: 'small muted' }, '若您認為準則名稱或定義需修正、應合併或刪除，請點開各準則下方的「修正建議」填寫。'));
   }
   c.append(stepper());
   c.append(el('h2', { style: 'margin-top:14px' }, `構面${'一二三四五六七'[DATA.cons.findIndex(x => x.abbr === con.abbr)]}：${con.name}`),
